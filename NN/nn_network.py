@@ -28,6 +28,27 @@ class Network:
             result.append( output )
 
         return result
+    
+
+    # human readable output
+    def predict_hr( self, input_data ):
+        # sample the dimension first
+        samples = len( input_data )
+        result = []
+
+        # run network over all samples
+        for i in range( samples ):
+            # forward propagation
+            output = input_data[i]
+            for layer in self.layers:
+                output = layer.fwd_prop( output )
+
+            if(output[0][0] > 0):
+                result.append( 1 )
+            else:
+                result.append( -1 )
+        return result
+
 
     # training the network
     def fit( self, x_train, y_train, epochs, learning_rate ):

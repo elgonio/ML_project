@@ -18,7 +18,7 @@ from data_loader import load_file
 
 # load the data
 print( "loading data..." )
-y_train, x_train = load_file( "dota2Test.csv" )
+y_train, x_train = load_file("D:/2019/Semester1/COMS3007 - ML/Project/Repo/NN/dota2ToyTest.csv")
 # we have to do funny things with the shape due to the way the NN is set up
 x_train = np.reshape( x_train, [x_train.shape[0], 1, x_train.shape[1]] )
 print( "loading completed \n" )
@@ -26,10 +26,10 @@ print( "loading completed \n" )
 # network
 net = Network()
 # 3 layers (1 hidden layer)
-num_layers = 3
+num_layers = 2
 num_nodes = 115
 # init layer
-net.add( FCLayer( 115, num_nodes ) )
+net.add( FCLayer( x_train.shape[2], num_nodes ) )
 net.add( ActivationLayer( tanh, tanh_prime ) )
 # hidden layer(s)
 for n in range( num_layers - 2 ):
@@ -41,16 +41,16 @@ net.add( ActivationLayer( tanh, tanh_prime ) )
 
 # train
 net.use( mse, mse_prime )
-net.fit( x_train, y_train, epochs = 1000, learning_rate = 0.02 )
+net.fit( x_train, y_train, epochs = 100, learning_rate = 0.003 )
 
 # test
-out = net.predict( x_train )  # replace with test when testing, then check outputs against the validation
+out = np.array( net.predict_hr( x_train ) )  # replace with test when testing, then check outputs against the validation
 accuracy = 0
 for i in range( len( out ) ):
     if out[i] == y_train[i]:
         accuracy += 1
     # print output to check
-    print( out )
+    print( "pred: ", out[i], " truth: ", y_train[i] )
 
 accuracy = accuracy/len( out )
 print( "Final accuracy: ", accuracy )
