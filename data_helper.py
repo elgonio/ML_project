@@ -33,7 +33,9 @@ def count_values(column,filename):
 
 def pca(filename):
 	data = np.genfromtxt(filename,delimiter=',')
+	y = data[:,1]
 	data = data[:,4:]
+
 	for col in data:
 		col = col-col.mean()
 	covar_matrix = (1/(data.shape[0]-1))* data.T@data
@@ -53,6 +55,15 @@ def pca(filename):
 		print("{} : {}".format(key, value))
 		if total > 70:
 			break
+
+
+	b = np.ones((data.shape[0],data.shape[1]+1))
+	b[:,1:] = data
+	b[:,0] = y
+	data = eig_vecs@data.T
+	df = DataFrame(data)
+	df.to_csv ('pca.csv',index=False,header=False) #Don't forget to add '.csv' at the end of the path
+	
 
 
 	#print(covar_matrix)
