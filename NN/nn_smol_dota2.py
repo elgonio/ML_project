@@ -18,7 +18,7 @@ from data_loader import load_file
 
 # load the data
 print( "loading training data..." )
-y_train, x_train = load_file("D:/2019/Semester1/COMS3007 - ML/Project/Repo/NN/dota2ToyTest.csv")
+y_train, x_train = load_file("D:/2019/Semester1/COMS3007 - ML/Project/Repo/NN/dota2Train.csv")
 # we have to do funny things with the shape due to the way the NN is set up
 x_train = np.reshape( x_train, [x_train.shape[0], 1, x_train.shape[1]] )
 print( "loading training data completed \n" )
