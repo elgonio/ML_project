@@ -17,11 +17,11 @@ from data_loader import load_file
 #y_train = np.array( [ [[-1]], [[1]], [[-1]], [[1]] ] )
 
 # load the data
-print( "loading data..." )
+print( "loading training data..." )
 y_train, x_train = load_file("D:/2019/Semester1/COMS3007 - ML/Project/Repo/NN/dota2ToyTest.csv")
 # we have to do funny things with the shape due to the way the NN is set up
 x_train = np.reshape( x_train, [x_train.shape[0], 1, x_train.shape[1]] )
-print( "loading completed \n" )
+print( "loading training data completed \n" )
 
 # network
 net = Network()
@@ -43,8 +43,8 @@ net.add( ActivationLayer( tanh, tanh_prime ) )
 net.use( mse, mse_prime )
 net.fit( x_train, y_train, epochs = 100, learning_rate = 0.003 )
 
-# test
-out = np.array( net.predict_hr( x_train ) )  # replace with test when testing, then check outputs against the validation
+# test training results
+out = np.array( net.predict_hr( x_train ) )
 accuracy = 0
 for i in range( len( out ) ):
     if out[i] == y_train[i]:
@@ -54,6 +54,23 @@ for i in range( len( out ) ):
 
 accuracy = accuracy/len( out )
 print( "Final accuracy: ", accuracy )
+
+print( "loading testing data..." )
+y_test, x_test = load_file("D:/2019/Semester1/COMS3007 - ML/Project/Repo/NN/dota2Test.csv")
+x_test = np.reshape( x_test, [x_test.shape[0], 1, x_test.shape[1]] )
+print( "loading testing data completed \n" )
+
+# testing
+test = np.array( net.predict_hr( x_test ) )
+test_accuracy = 0
+for i in range( len( test ) ):
+    if test[i] == y_test[i]:
+        test_accuracy += 1
+    print( "pred: ", test[i], "truth: ", y_test[i] )
+
+test_accuracy = test_accuracy/len( test )
+print( "Final accuracy: ", test_accuracy )
+
 
 # OBSOLETE
 # creating hidden layers
