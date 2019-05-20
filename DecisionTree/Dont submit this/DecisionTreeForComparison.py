@@ -211,9 +211,22 @@ def calculate_accuracy(df, tree):
     df["classification"] = df.apply(classify_example, args=(tree,), axis=1)
     df["classification_correct"] = df["classification"] == df["label"]
 
+    labels = df["label"]
+    predictions = df["classification"]
+    confusionmatrix = {"TruePositive": 0,"TrueNegative": 0,"FalsePositive":0,"FalseNegative":0}
+    for x in range(0, len(labels)):
+        if labels[x] == predictions[x] and (labels[x] == 1 ):
+            confusionmatrix['TruePositive'] += 1
+        elif labels[x] == predictions[x] and (labels[x] == -1):
+            confusionmatrix['TrueNegative'] += 1
+        elif labels[x] != predictions[x] and (labels[x] == 1 and predictions[x] == -1):
+            confusionmatrix['FalseNegative'] += 1
+        elif labels[x] != predictions[x] and (labels[x] == -1 and predictions[x] == 1):
+            confusionmatrix['FalsePositive'] += 1
+
     accuracy = df["classification_correct"].mean()
 
-    return accuracy
+    return accuracy, confusionmatrix
 
 if __name__ == '__main__':
 
@@ -225,15 +238,17 @@ if __name__ == '__main__':
     testDf['label'] = testDf['labels']
     testDf = testDf.drop(['labels', 'clusterID'], axis=1)  # drop column 1 and 2
 
-    treeDepth = 3
+    treeDepth = 31
     x = []
     y = []
-    for case in range(1, 31):
+    for case in range(1, 2):
         x.append(treeDepth)
         tree = decision_tree_algorithm(trainingDf, max_depth=treeDepth)
-        testAcc = np.around(calculate_accuracy(testDf, tree)*100,2)
+        testAcc, confusionDict = calculate_accuracy(testDf, tree)
+        testAcc = np.around(testAcc*100,2)
         y.append(testAcc)
         print("Case {}: Tree Depth = {}     Accuracy on Test Data: {}%".format(case,treeDepth,testAcc))
+        print((confusionDict))
         treeDepth += 2
 
     trainingDf = pd.read_csv("dota2TrainSmall.csv")
