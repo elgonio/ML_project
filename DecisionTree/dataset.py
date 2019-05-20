@@ -43,6 +43,19 @@ class Dataset:
     def get_NumFeatures(self):
         return len(self.data[0])
 
+    def get_majorityLabel(self):
+        max = 0
+        indexLabel = ""
+        for label in self.labelDict:
+            if self.labelDict[label] > max:
+                max = self.labelDict[label]
+                indexLabel = label
+        return indexLabel
+
+    def get_valuesOfFeature(self, featureID):
+        f = Feature(self, featureID)
+        f.get_Values()
+        return f
     """
     Since the dota data set has no labelled features in the actual data set,
     numerical values will represent each feature
