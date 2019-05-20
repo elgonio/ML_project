@@ -37,3 +37,17 @@ test 1:
 	train mse error avg: 0.793956
 	train accuracy: 0.79372 %
 	test accuracy: 0.5497142857142857 %
+
+test 2:
+	epochs: 500
+	learning rate: 0.005
+	train mse error avg: 0.725741
+	train accuracy: 0.80376 %
+	test accuracy: 0.555 %
+
+test 3:
+	epochs: 500
+	learning rate: 0.005
+	train mse error avg: 0.821568
+	train accuracy: 0.78756
+	test  accuracy: 0.548

@@ -39,10 +39,12 @@ net.fit( x_train, y_train, epochs = 500, learning_rate = 0.005 )
 # test training results
 out = np.array( net.predict_hr( x_train ) )
 accuracy = 0
+
 for i in range( len( out ) ):
     if out[i] == y_train[i]:
         accuracy += 1
     # print output to check
+    #print( "Current Accuracy: " )
     #print( "pred: ", out[i], " truth: ", y_train[i] )
 
 accuracy = accuracy/len( out )
@@ -56,13 +58,31 @@ print( "loading testing data completed \n" )
 # testing
 test = np.array( net.predict_hr( x_test ) )
 test_accuracy = 0
+
+# confusion matrix things
+cm_tp = 0
+cm_tn = 0
+cm_fp = 0
+cm_fn = 0
+
 for i in range( len( test ) ):
     if test[i] == y_test[i]:
         test_accuracy += 1
+
+        # confusion matrix
+        if y_test[i] == 1 and test[i] == 1:
+            cm_tp += 1
+        elif y_test[i] == -1 and test[i] == -1:
+            cm_tn += 1
+        elif y_test[i] == -1 and test[i] == 1:
+            cm_fp += 1
+        elif y_test[i] == 1 and test[i] == -1:
+            cm_fn += 1  
     #print( "pred: ", test[i], "truth: ", y_test[i] )
 
 test_accuracy = test_accuracy/len( test )
-print( "Final accuracy: ", test_accuracy )
+print( "Final accuracy: ", test_accuracy, "\n" )
+print( "TP: ", cm_tp, "TN: ", cm_tn, "FP: ", cm_fp, "FN: ", cm_fn  )
 
 
 # OBSOLETE
