@@ -71,13 +71,13 @@ for i in range( len( test ) ):
 
         # confusion matrix
         if y_test[i] == 1 and test[i] == 1:
-            tp += 1
+            cm_tp += 1
         elif y_test[i] == -1 and test[i] == -1:
-            tn += 1
+            cm_tn += 1
         elif y_test[i] == -1 and test[i] == 1:
-            fp += 1
+            cm_fp += 1
         elif y_test[i] == 1 and test[i] == -1:
-            fn += 1  
+            cm_fn += 1  
     #print( "pred: ", test[i], "truth: ", y_test[i] )
 
 test_accuracy = test_accuracy/len( test )
