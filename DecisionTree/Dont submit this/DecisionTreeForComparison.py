@@ -217,23 +217,54 @@ def calculate_accuracy(df, tree):
 
 if __name__ == '__main__':
 
-    trainingDf = pd.read_csv("dota2Toy.csv")
+
+    trainingDf = pd.read_csv("dota2TrainSmall.csv")
     trainingDf['label'] = trainingDf['labels']
     trainingDf = trainingDf.drop(['labels', 'clusterID'], axis=1)  # drop column 1 and 2
-    testDf = pd.read_csv("dota2ToyTest.csv")
+    testDf = pd.read_csv("dota2TestSmall.csv")
     testDf['label'] = testDf['labels']
     testDf = testDf.drop(['labels', 'clusterID'], axis=1)  # drop column 1 and 2
 
-    treeDepth = 5
+    treeDepth = 3
     x = []
     y = []
-    for case in range(1, 16):
-        y.append(treeDepth)
+    for case in range(1, 31):
+        x.append(treeDepth)
         tree = decision_tree_algorithm(trainingDf, max_depth=treeDepth)
         testAcc = np.around(calculate_accuracy(testDf, tree)*100,2)
-        x.append(testAcc)
-        print("Case {}: Tree Depth = {} Accuracy on Test Data: {}%".format(case,treeDepth,testAcc))
-        treeDepth += 5
+        y.append(testAcc)
+        print("Case {}: Tree Depth = {}     Accuracy on Test Data: {}%".format(case,treeDepth,testAcc))
+        treeDepth += 2
 
+    trainingDf = pd.read_csv("dota2TrainSmall.csv")
+    trainingDf['label'] = trainingDf['labels']
+    trainingDf = trainingDf.drop(['labels', 'clusterID'], axis=1)  # drop column 1 and 2
+    testDf = pd.read_csv("dota2TestSmall.csv")
+    testDf['label'] = testDf['labels']
+    testDf = testDf.drop(['labels', 'clusterID'], axis=1)  # drop column 1 and 2
+
+    '''
+       treeDepth = 3
+    y2 = []
+    for case in range(1, 31):
+        tree2 = decision_tree_algorithm(trainingDf, max_depth=treeDepth)
+        trainingAcc = np.around(calculate_accuracy(trainingDf, tree2)*100,2)
+        y2.append(trainingAcc)
+        print("Case {}: Tree Depth = {}     Accuracy on Training Data: {}%".format(case,treeDepth,trainingAcc))
+        treeDepth += 2 
+    '''
+
+
+    #print(x)
+    #print(y)
     #Plot on graph
+    plt.plot(x,y, linestyle='--', marker='o', color='r', label="Test Data")
+    #plt.plot(x,y2, linestyle='--', marker='o', color='b', label="Training Data")
+    plt.axis([0, 70, 51, 56])
+    plt.xlabel('Tree Depth')
+    plt.ylabel('Accuracy (%)')
+    plt.title('Line Graph showing the relationship between tree depth and accuracy for test data')
+    plt.grid()
+    plt.legend()
+    plt.show()
 
