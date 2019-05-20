@@ -30,7 +30,7 @@ class Feature:
                     self.attributeDict[self.values[pos]] += 1
             '''
 
-        print(self.attributeDict)
+        #print(self.attributeDict)
         self.featureGain = self.calcFeatureGain()
         #print(self.featureGain)
 

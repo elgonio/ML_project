@@ -15,10 +15,10 @@ class Dataset:
             else:
                 self.labelDict[label] += 1
         self.entropy = self.calcEntropy()
-        print(self.labelDict)
+        #print(self.labelDict)
 
         f = Feature(self,1)
-        print("Num Features = "+str(self.get_NumFeatures()))
+        #print("Num Features = "+str(self.get_NumFeatures()))
         #print(self.get_FeatureGains())
 
     def minusPLog2P(self, p):
@@ -43,6 +43,16 @@ class Dataset:
     def get_NumFeatures(self):
         return len(self.data[0])
 
+    """
+    Since the dota data set has no labelled features in the actual data set,
+    numerical values will represent each feature
+    """
+    def get_Features(self):
+        featureArray = []
+        for f in range(0, self.get_NumFeatures()):
+            featureArray.append(f)
+
+        return f
 
 
 
