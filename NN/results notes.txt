@@ -1,0 +1,53 @@
+train points: 25000
+test points: 7000
+( around 80 20 split )
+
+2 layer
+test 0: (the initial test to see if everything was working fine)
+	epochs: 500
+	learning rate: 0.005 
+	train accuracy: 0.91252 %
+	test accuracy: 0.5494285714285714 %
+
+test 1:
+	epochs: 500
+	learning rate: 0.005
+	train mse error avg: 0.303521
+	train accuracy: 0.90964 %
+	test accuracy: 0.5448571428571428 %
+
+test 2:
+	epochs: 500
+	learning rate: 0.005
+	train mse error avg: 0.326249
+	train accuracy: 0.91112 %
+	test accuracy: 0.5544285714285714 %
+
+test 3:
+	epochs: 500
+	learning rate: 0.005
+	train mse error avg: 0.296209
+	train accuracy: 0.91352 %
+	test accuracy: 0.5457142857142857 %
+
+3 layer
+test 1:
+	epochs: 500
+	learning rate: 0.005
+	train mse error avg: 0.793956
+	train accuracy: 0.79372 %
+	test accuracy: 0.5497142857142857 %
+
+test 2:
+	epochs: 500
+	learning rate: 0.005
+	train mse error avg: 0.725741
+	train accuracy: 0.80376 %
+	test accuracy: 0.555 %
+
+test 3:
+	epochs: 500
+	learning rate: 0.005
+	train mse error avg: 0.821568
+	train accuracy: 0.78756
+	test  accuracy: 0.548

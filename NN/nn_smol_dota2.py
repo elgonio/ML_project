@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 
 from nn_network import Network 
 from nn_fc_layer import FCLayer 
@@ -9,23 +9,16 @@ from nn_loss import mse, mse_prime
 from data_loader import load_file
 
 
-# training data
-#x_train = np.array( [ [[2,2,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,-1,0,0,0,-1,0,0,1,0,0,1,0,0,0,1,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], 
-#                    [[8,2,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,-1,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0]], 
-#                    [[2,2,1,0,0,0,-1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,-1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], 
-#                    [[2,2,-1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,-1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,-1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]] ] )
-#y_train = np.array( [ [[-1]], [[1]], [[-1]], [[1]] ] )
-
 # load the data
-print( "loading data..." )
-y_train, x_train = load_file("D:/2019/Semester1/COMS3007 - ML/Project/Repo/NN/dota2ToyTest.csv")
+print( "loading training data..." )
+y_train, x_train = load_file("D:/2019/Semester1/COMS3007 - ML/Project/Repo/NN/dota2nnTrain.csv")
 # we have to do funny things with the shape due to the way the NN is set up
 x_train = np.reshape( x_train, [x_train.shape[0], 1, x_train.shape[1]] )
-print( "loading completed \n" )
+print( "loading training data completed \n" )
 
 # network
 net = Network()
-# 3 layers (1 hidden layer)
+# number of layers
 num_layers = 2
 num_nodes = 115
 # init layer
@@ -41,28 +34,61 @@ net.add( ActivationLayer( tanh, tanh_prime ) )
 
 # train
 net.use( mse, mse_prime )
-net.fit( x_train, y_train, epochs = 100, learning_rate = 0.003 )
+net.fit( x_train, y_train, epochs = 500, learning_rate = 0.005 )
 
-# test
-out = np.array( net.predict_hr( x_train ) )  # replace with test when testing, then check outputs against the validation
+# test training results
+out = np.array( net.predict_hr( x_train ) )
 accuracy = 0
+
 for i in range( len( out ) ):
     if out[i] == y_train[i]:
         accuracy += 1
     # print output to check
-    print( "pred: ", out[i], " truth: ", y_train[i] )
+    #print( "Current Accuracy: " )
+    #print( "pred: ", out[i], " truth: ", y_train[i] )
 
 accuracy = accuracy/len( out )
 print( "Final accuracy: ", accuracy )
 
-# OBSOLETE
-# creating hidden layers
-#for n in range( num_layers - 2 ):
-#    net.add( FCLayer( num_nodes, num_nodes ) )
-#    net.add( ActivationLayer( tanh, tanh_prime ) )
+print( "loading testing data..." )
+y_test, x_test = load_file("D:/2019/Semester1/COMS3007 - ML/Project/Repo/NN/dota2nnTest.csv")
+x_test = np.reshape( x_test, [x_test.shape[0], 1, x_test.shape[1]] )
+print( "loading testing data completed \n" )
 
-# writing out to file
-# f = open( "results.txt", "w+" )
-# print( out )
-# f.write( str( out ) )
-# f.close()
+# testing
+test = np.array( net.predict_hr( x_test ) )
+test_accuracy = 0
+
+# confusion matrix things
+cm_tp = 0
+cm_tn = 0
+cm_fp = 0
+cm_fn = 0
+
+for i in range( len( test ) ):
+    if test[i] == y_test[i]:
+        test_accuracy += 1
+
+        # confusion matrix
+        if y_test[i] == 1 and test[i] == 1:
+            tp += 1
+        elif y_test[i] == -1 and test[i] == -1:
+            tn += 1
+        elif y_test[i] == -1 and test[i] == 1:
+            fp += 1
+        elif y_test[i] == 1 and test[i] == -1:
+            fn += 1  
+    #print( "pred: ", test[i], "truth: ", y_test[i] )
+
+test_accuracy = test_accuracy/len( test )
+print( "Final accuracy: ", test_accuracy, "\n" )
+print( "TP: ", cm_tp, "TN: ", cm_tn, "FP: ", cm_fp, "FN: ", cm_fn  )
+
+
+# OBSOLETE
+# training data
+#x_train = np.array( [ [[2,2,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,-1,0,0,0,-1,0,0,1,0,0,1,0,0,0,1,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], 
+#                    [[8,2,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,-1,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0]], 
+#                    [[2,2,1,0,0,0,-1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,-1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], 
+#                    [[2,2,-1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,-1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,-1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]] ] )
+#y_train = np.array( [ [[-1]], [[1]], [[-1]], [[1]] ] )
