@@ -1,4 +1,4 @@
-# base class for a layer
+# base class for a layer, based on tutorial https://medium.com/datadriveninvestor/math-neural-network-from-scratch-in-python-d6da9f29ce65
 class Layer:
     def __init__( self ):
         self.input = None
